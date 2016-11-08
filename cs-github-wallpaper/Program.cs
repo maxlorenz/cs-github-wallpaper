@@ -1,7 +1,5 @@
-﻿using System.Windows.Forms;
-using System.Drawing;
-using System.Xml;
-using System;
+﻿using System;
+using System.Net;
 
 namespace cs_github_wallpaper
 {
@@ -9,7 +7,22 @@ namespace cs_github_wallpaper
     {
         static void Main(string[] args)
         {
-            var downloader = new GitHubSVGDownloader("test");
+            var gitHubEvents = new GitHubEvents("maxlorenz");
+
+            try
+            {
+                foreach (var evt in gitHubEvents.getEvents())
+                {
+                    var eventSummary = String.Format("{}: {} -> {}", evt.created_at, evt.type, evt.repo.name);
+                    Console.WriteLine(eventSummary);
+                }
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine("Could not fetch the json data.");
+                Console.WriteLine("Error message: " + ex.Message);
+            }
+
             Console.ReadKey();
         }
     }
